@@ -1,0 +1,46 @@
+@import '~antd/dist/antd.less';
+
+* {
+    font-family: @font-family;
+}
+
+@mainColor: #13227A;
+
+.rs-header {
+    background: #fff !important;
+    box-shadow: @shadow-1-down;
+    display: flex;
+    z-index: 100;
+
+    .logo {
+        padding: 16px;
+        line-height: 1;
+        font-size: 24px;
+        font-weight: 600;
+        color: @mainColor;
+        text-transform: capitalize;
+
+        img {
+            margin-right: 16px;
+            height: 32px;
+        }
+    }
+    .user-avatar {
+        margin-left: auto;
+        font-size: 24px;
+    }
+}
+
+.rs-body {
+    min-height: calc(100vh - 64px) !important;
+}
+
+.rs-content {
+    margin: 18px 18px 0 18px;
+    background: #fff;
+}
+
+.rs-footer {
+    padding: 16px 50px !important;
+    text-align: center;
+}
