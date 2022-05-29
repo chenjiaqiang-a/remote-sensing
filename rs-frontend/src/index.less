@@ -13,8 +13,8 @@
     z-index: 100;
 
     .logo {
-        padding: 16px;
-        line-height: 1;
+        display: flex;
+        align-items: center;
         font-size: 24px;
         font-weight: 600;
         color: @mainColor;
@@ -31,7 +31,10 @@
     }
 }
 
-.rs-body {
+.rs-login {
+    min-height: calc(100vh - 64px) !important;
+}
+.rs-platform {
     min-height: calc(100vh - 64px) !important;
 }
 

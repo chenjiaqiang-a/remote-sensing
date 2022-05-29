@@ -1,15 +1,12 @@
 import { Layout } from "antd";
-import { Link } from "react-router-dom";
 
-const { Content, Footer } = Layout;
+const { Footer, Content } = Layout;
 
-const Home = () => {
+const Login = () => {
     return (
-        <Layout className="rs-home">
+        <Layout className="rs-login">
             <Content>
-                <Link to="/platform">
-                    功能页
-                </Link>
+                Login
             </Content>
             <Footer className="rs-footer">
                 Remote Sensing ©2022 Created by 冲它吖的！
@@ -18,4 +15,4 @@ const Home = () => {
     );
 }
  
-export default Home;
+export default Login;
