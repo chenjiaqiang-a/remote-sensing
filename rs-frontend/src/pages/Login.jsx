@@ -1,7 +1,7 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Layout, Modal, Tabs, Typography } from "antd";
 import { Link } from "react-router-dom";
-import logoImg from '../assets/logo.png';
+import logoImg from '../assets/images/logo.png';
 
 const { Footer, Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -148,7 +148,7 @@ const RegisterForm = () => {
                 wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 16, offset: 8}}}
             >
                 <Checkbox>
-                    我已阅读<Button type="link" style={{padding: 0}} onClick={showAgreement}>用户协议</Button>
+                    我已阅读 <Button type="link" style={{padding: 0, fontWeight: 'bolder'}} onClick={showAgreement}>用户协议</Button>
                 </Checkbox>
             </Form.Item>
             <Form.Item wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 16, offset: 8}}}>
@@ -166,7 +166,7 @@ const Login = () => {
                     <Title level={2}>
                         <img style={{height: 60}} src={logoImg} alt="logo" /> Remote Sensing
                     </Title>
-                    <Text type="secondary">基于深度学习的多功能遥感影像处理平台，给你直观、简洁、方便的体验</Text>
+                    <Text style={{color: '#13227a'}}>基于深度学习的多功能遥感影像处理平台，给你直观、简洁、方便的体验</Text>
                 </Typography>
                 <Tabs
                     style={{maxWidth: 400, margin: '0 auto'}}

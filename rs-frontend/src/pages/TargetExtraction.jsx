@@ -1,7 +1,9 @@
+import FileUploader from "../components/FileUpload";
+
 const TargetExtraction = () => {
     return (
         <div className="rs-target-extraction">
-            <h1>目标提取</h1>
+            <FileUploader />
         </div>
     );
 }

@@ -2,9 +2,9 @@ import { Layout, Space, Tooltip, Avatar, Dropdown, Menu, Button, Modal } from "a
 import { GithubFilled, MailFilled, SelectOutlined, SettingOutlined, ToolOutlined, UserOutlined } from '@ant-design/icons';
 import { Link} from 'react-router-dom';
 
-import logoImg from '../assets/logo.png';
+import logoImg from '../assets/images/logo.png';
 import { useContext } from "react";
-import loginContext from "../context/loginContext";
+import loginContext from "../store/loginContext";
 
 const { Header } = Layout;
 

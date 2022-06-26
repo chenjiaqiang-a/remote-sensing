@@ -138,7 +138,7 @@ const UserInfo = () => {
                     <Title level={2}>
                         个人信息
                     </Title>
-                    <Text type="secondary">
+                    <Text style={{color: '#13227a'}}>
                         修改个人信息后，请点击保存提交。
                     </Text>
                 </Typography>

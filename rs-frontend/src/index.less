@@ -4,10 +4,11 @@
     font-family: @font-family;
 }
 
-@mainColor: #13227A;
+@mainColor: #13227a;
+@white: #fff;
 
 .rs-header {
-    background: #fff !important;
+    background: @white !important;
     box-shadow: @shadow-1-down;
     display: flex;
     z-index: 100;
@@ -31,19 +32,126 @@
     }
 }
 
+.rs-home {
+    .home-banner {
+        min-height: calc(100vh - 64px);
+        background: linear-gradient(
+                rgba(255, 255, 255, 0.6),
+                rgba(255, 255, 255, 0.7)
+            ),
+            url(./assets/images/bg-01.jpg) no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        padding: 25vh 15%;
+    }
+    .home-feature,
+    .home-about {
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    }
+
+    .home-feature {
+        background: @white;
+        img {
+            width: 100%;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.16))
+                drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12))
+                drop-shadow(0 5px 12px rgba(0, 0, 0, 0.09));
+            transition: 0.3s linear;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    .home-about {
+        .about-card {
+            background: @white;
+            box-shadow: @shadow-1-down;
+            padding: 0 20px;
+            margin: 40px 0;
+            .about-desc {
+                display: flex;
+                align-items: center;
+            }
+            img {
+                width: 100%;
+                max-width: 450px;
+                margin: 0 auto;
+            }
+        }
+    }
+}
+
+.rs-login {
+    background: linear-gradient(
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 255, 255, 0.8)
+        ),
+        url(./assets/images/bg-02.jpg) no-repeat !important;
+
+    .rs-content {
+        margin: 18px 18px 0 18px;
+        background: @white;
+    }
+}
+
+.rs-find-password {
+    background: linear-gradient(
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 255, 255, 0.8)
+        ),
+        url(./assets/images/bg-03.jpg) no-repeat !important;
+}
+
+.rs-user-info {
+    background: linear-gradient(
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 255, 255, 0.8)
+        ),
+        url(./assets/images/bg-04.jpg) no-repeat !important;
+}
+
 .rs-login,
 .rs-find-password,
 .rs-platform,
 .rs-user-info {
     min-height: calc(100vh - 64px) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
 }
 
-.rs-content {
-    margin: 18px 18px 0 18px;
-    background: #fff;
+.rs-sider-right {
+    padding: 30px 20px;
+
+    .ant-list-items {
+        max-height: 60vh;
+        overflow: auto;
+    }
+
+}
+
+.rs-platform .rs-content {
+    padding: 30px 20px 0;
+}
+
+.rs-target-extraction {
+    height: 100%;
+    background: @white;
+    box-shadow: @shadow-1-down;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .rs-footer {
     padding: 16px 50px !important;
     text-align: center;
+    background: transparent !important;
 }

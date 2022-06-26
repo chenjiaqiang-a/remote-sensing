@@ -34,7 +34,7 @@ const FindPassword = () => {
                     <Title level={2}>
                         找回密码
                     </Title>
-                    <Text type="secondary">
+                    <Text style={{color: '#13227a'}}>
                         请输入需要找回密码的邮箱地址，我们将发送验证码邮件，请注意查收。
                     </Text>
                 </Typography>
