@@ -1,7 +1,19 @@
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Layout, Modal, Tabs, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Checkbox,
+    Form,
+    Input,
+    Layout,
+    Modal,
+    Tabs,
+    Typography,
+    message,
+} from 'antd';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import logoImg from '../assets/images/logo.png';
+import { useLogin, useRegister } from '../hooks/loginHooks';
 
 const { Footer, Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -10,49 +22,67 @@ const validateMessages = {
     required: '此项不能为空！',
     types: {
         email: '电子邮件格式不正确！',
-    }
+    },
 };
 
-const LoginForm = () => {
-
-    const handleFinish = (values) => {
-        console.log(values);
-    }
+const LoginForm = ({email}) => {
+    const {handleLogin, pending} = useLogin();
+    const handleFinish = async (values) => {
+        try {
+            const result = await handleLogin(values.email, values.password);
+            if (result.code === 1) {
+                message.success(result.msg);
+                // 记录用户信息
+            } else {
+                throw Error('用户名或密码错误！');
+            }
+        } catch (error) {
+            message.error(error.message);
+        }
+    };
 
     return (
         <Form
             name="login"
             validateMessages={validateMessages}
-            initialValues={{remember: true}}
+            initialValues={{ remember: true, email }}
             onFinish={handleFinish}
-            style={{maxWidth: 300, margin: '0 auto'}}
+            style={{ maxWidth: 300, margin: '0 auto' }}
         >
             <Form.Item
                 name="email"
-                rules={[{type: 'email'}, {required: true}]}
+                rules={[{ type: 'email' }, { required: true }]}
             >
                 <Input prefix={<MailOutlined />} placeholder="邮箱地址" />
             </Form.Item>
-            <Form.Item
-                name="password"
-                rules={[{required: true}]}
-            >
-                <Input prefix={<LockOutlined/>} type="password" placeholder="密码" />
+            <Form.Item name="password" rules={[{ required: true }]}>
+                <Input
+                    prefix={<LockOutlined />}
+                    type="password"
+                    placeholder="密码"
+                />
             </Form.Item>
             <Form.Item>
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                     <Checkbox>记住密码</Checkbox>
                 </Form.Item>
-                <Link to="/find-password" style={{float: 'right'}}>忘记密码？</Link>
+                <Link to="/find-password" style={{ float: 'right' }}>
+                    忘记密码？
+                </Link>
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit" style={{width: '100%'}}>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ width: '100%' }}
+                    loading={pending}
+                >
                     登录
                 </Button>
             </Form.Item>
         </Form>
     );
-}
+};
 
 const agreementContent = (
     <Typography>
@@ -68,8 +98,9 @@ const agreementContent = (
         </Paragraph>
         <Title level={2}>设计资源</Title>
         <Paragraph>
-            我们提供完善的设计原则、最佳实践和设计资源文件（<Text code>Sketch</Text> 和
-            <Text code>Axure</Text>），来帮助业务快速设计出高质量的产品原型。
+            我们提供完善的设计原则、最佳实践和设计资源文件（
+            <Text code>Sketch</Text> 和<Text code>Axure</Text>
+            ），来帮助业务快速设计出高质量的产品原型。
         </Paragraph>
         <Paragraph>
             蚂蚁的企业级产品是一个庞大且复杂的体系。这类产品不仅量级巨大且功能复杂，而且变动和并发频繁，常常需要设计与开发能够快速的做出响应。同时这类产品中有存在很多类似的页面以及组件，可以通过抽象得到一些稳定且高复用性的内容。
@@ -80,27 +111,38 @@ const agreementContent = (
             的设计价值观，通过模块化的解决方案，降低冗余的生产成本，让设计者专注于
             <Text strong>更好的用户体验</Text>。
         </Paragraph>
-    </Typography> 
-)
+    </Typography>
+);
 
-const RegisterForm = () => {
-    const handleFinish = (values) => {
-        console.log(values);
-    }
+const RegisterForm = ({onRegistered}) => {
+    const {handleRegister, pending} = useRegister();
+    const handleFinish = async (values) => {
+        try {
+            const result = await handleRegister(values);
+            if (result.code === -2) {
+                throw Error(result.msg);
+            }
+            message.success(result.msg);
+            onRegistered(values.email);
+        } catch (err) {
+            message.error(err.message);
+        }
+        
+    };
 
     const showAgreement = () => {
         Modal.info({
             icon: null,
             width: 600,
-            content: agreementContent
-        })
+            content: agreementContent,
+        });
     };
 
     return (
         <Form
             name="register"
-            labelCol={{xs: {span: 24}, sm: {span: 8}}}
-            wrapperCol={{xs: {span: 24}, sm: {span: 16}}}
+            labelCol={{ xs: { span: 24 }, sm: { span: 8 } }}
+            wrapperCol={{ xs: { span: 24 }, sm: { span: 16 } }}
             onFinish={handleFinish}
             scrollToFirstError
             validateMessages={validateMessages}
@@ -108,14 +150,14 @@ const RegisterForm = () => {
             <Form.Item
                 name="email"
                 label="邮箱地址"
-                rules={[{type: 'email'}, {required: true}]}
+                rules={[{ type: 'email' }, { required: true }]}
             >
                 <Input />
             </Form.Item>
             <Form.Item
                 name="password"
                 label="密码"
-                rules={[{required: true}]}
+                rules={[{ required: true }]}
                 hasFeedback
             >
                 <Input.Password />
@@ -126,15 +168,17 @@ const RegisterForm = () => {
                 dependencies={['password']}
                 hasFeedback
                 rules={[
-                    {required: true},
+                    { required: true },
                     ({ getFieldValue }) => ({
                         validator(_, value) {
                             if (!value || getFieldValue('password') === value) {
                                 return Promise.resolve();
                             }
-                            return Promise.reject(new Error('两次输入的密码不匹配！'));
-                        }
-                    })
+                            return Promise.reject(
+                                new Error('两次输入的密码不匹配！')
+                            );
+                        },
+                    }),
                 ]}
             >
                 <Input.Password />
@@ -143,42 +187,93 @@ const RegisterForm = () => {
                 name="agreement"
                 valuePropName="checked"
                 rules={[
-                    {validator: (_, value) => value ? Promise.resolve() : Promise.reject(new Error('需要您接受我们的协议！'))}
+                    {
+                        validator: (_, value) =>
+                            value
+                                ? Promise.resolve()
+                                : Promise.reject(
+                                      new Error('需要您接受我们的协议！')
+                                  ),
+                    },
                 ]}
-                wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 16, offset: 8}}}
+                wrapperCol={{
+                    xs: { span: 24, offset: 0 },
+                    sm: { span: 16, offset: 8 },
+                }}
             >
                 <Checkbox>
-                    我已阅读 <Button type="link" style={{padding: 0, fontWeight: 'bolder'}} onClick={showAgreement}>用户协议</Button>
+                    我已阅读{' '}
+                    <Button
+                        type="link"
+                        style={{ padding: 0, fontWeight: 'bolder' }}
+                        onClick={showAgreement}
+                    >
+                        用户协议
+                    </Button>
                 </Checkbox>
             </Form.Item>
-            <Form.Item wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 16, offset: 8}}}>
-                <Button type="primary" htmlType="submit">注册</Button>
+            <Form.Item
+                wrapperCol={{
+                    xs: { span: 24, offset: 0 },
+                    sm: { span: 16, offset: 8 },
+                }}
+            >
+                <Button type="primary" htmlType="submit" loading={pending}>
+                    注册
+                </Button>
             </Form.Item>
         </Form>
-    )
-}
+    );
+};
 
 const Login = () => {
+    const [tab, setTab] = useState('login');
+    const [email, setEmail] = useState('');
+
+    const handleRegistered = (value) => {
+        setEmail(value);
+        setTab('login');
+    };
+
     return (
         <Layout className="rs-login">
-            <Content >
-                <Typography style={{textAlign: "center", maxWidth: 300, margin: '40px auto 0'}}>
+            <Content>
+                <Typography
+                    style={{
+                        textAlign: 'center',
+                        maxWidth: 300,
+                        margin: '40px auto 0',
+                    }}
+                >
                     <Title level={2}>
-                        <img style={{height: 60}} src={logoImg} alt="logo" /> Remote Sensing
+                        <img style={{ height: 60 }} src={logoImg} alt="logo" />{' '}
+                        Remote Sensing
                     </Title>
-                    <Text style={{color: '#13227a'}}>基于深度学习的多功能遥感影像处理平台，给你直观、简洁、方便的体验</Text>
+                    <Text style={{ color: '#13227a' }}>
+                        基于深度学习的多功能遥感影像处理平台，给你直观、简洁、方便的体验
+                    </Text>
                 </Typography>
                 <Tabs
-                    style={{maxWidth: 400, margin: '0 auto'}}
-                    defaultActiveKey="login"
+                    style={{ maxWidth: 400, margin: '0 auto' }}
+                    activeKey={tab}
+                    onChange={activeKey => setTab(activeKey)}
                     centered
+                    destroyInactiveTabPane
                     size="large"
                 >
-                    <Tabs.TabPane style={{width: '100%'}} tab="登录" key="login">
-                        <LoginForm />
+                    <Tabs.TabPane
+                        style={{ width: '100%' }}
+                        tab="登录"
+                        key="login"
+                    >
+                        <LoginForm email={email} />
                     </Tabs.TabPane>
-                    <Tabs.TabPane style={{width: '100%'}} tab="注册" key="register">
-                        <RegisterForm />
+                    <Tabs.TabPane
+                        style={{ width: '100%' }}
+                        tab="注册"
+                        key="register"
+                    >
+                        <RegisterForm onRegistered={handleRegistered} />
                     </Tabs.TabPane>
                 </Tabs>
             </Content>
@@ -187,6 +282,6 @@ const Login = () => {
             </Footer>
         </Layout>
     );
-}
- 
+};
+
 export default Login;

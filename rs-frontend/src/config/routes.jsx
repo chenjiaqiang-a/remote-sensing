@@ -92,7 +92,7 @@ export function renderRoutes(routes, isLogin) {
             return <Route key={route.key} index element={route.element} />;
         }
         return (
-            <Route path={route.path} element={route.element}>
+            <Route key={route.key} path={route.path} element={route.element}>
                 {route.children && renderRoutes(route.children, isLogin)}
             </Route>
         );
@@ -116,6 +116,11 @@ export function renderRoutes(routes, isLogin) {
                 >
                     {route.children && renderRoutes(route.children, isLogin)}
                 </Route>
+            );
+        }
+        if (route.path && route.path === 'login' && isLogin) {
+            return (
+                <Route key={route.key} path={route.path} element={<Navigate to="/" replace />} />
             );
         }
         return renderRoute(route);
