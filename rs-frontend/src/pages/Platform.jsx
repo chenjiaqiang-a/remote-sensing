@@ -39,6 +39,7 @@ const Platform = () => {
     }
     const [currentKey, setCurrentKey] = useState(current);
     const [listData, setListData] = useState(testData);
+    const [collapsedLeft, setCollapsedLeft] = useState(false);
 
     const handleFilterChange = debounce((e) => {
         const text = e.target.value;
@@ -59,9 +60,52 @@ const Platform = () => {
         </div>
     );
 
+    const fileList = (
+        <>
+            <List
+                header={listHeader}
+                dataSource={listData}
+                style={{ marginBottom: 20 }}
+                renderItem={(item) => (
+                    <List.Item
+                        actions={[
+                            <Tooltip title="选择">
+                                <Button icon={<SelectOutlined />} type="link" />
+                            </Tooltip>,
+                            <Tooltip title="删除">
+                                <Button
+                                    icon={<DeleteOutlined />}
+                                    type="link"
+                                    danger
+                                />
+                            </Tooltip>,
+                        ]}
+                    >
+                        <Tag
+                            icon={<FileImageOutlined />}
+                            color={item.checked ? '#2db7f5' : 'blue'}
+                        >
+                            {item.filename}
+                        </Tag>
+                    </List.Item>
+                )}
+            />
+            <Upload {...useUpload()}>
+                <Button icon={<UploadOutlined />}>上传文件</Button>
+            </Upload>
+        </>
+    );
+
     return (
         <Layout className="rs-platform">
-            <Sider className="rs-sider-left" width={200}>
+            <Sider
+                className="rs-sider-left"
+                width={200}
+                theme="light"
+                collapsible
+                collapsed={collapsedLeft}
+                onCollapse={(v) => setCollapsedLeft(v)}
+            >
                 <Menu
                     mode="inline"
                     selectedKeys={[currentKey]}
@@ -78,41 +122,12 @@ const Platform = () => {
                     Remote Sensing ©2022 Created by 冲它吖的！
                 </Footer>
             </Layout>
-            <Sider className="rs-sider-right" width={300} theme="light">
-                <List
-                    header={listHeader}
-                    dataSource={listData}
-                    style={{marginBottom: 20}}
-                    renderItem={(item) => (
-                        <List.Item
-                            actions={[
-                                <Tooltip title="选择">
-                                    <Button
-                                        icon={<SelectOutlined />}
-                                        type="link"
-                                    />
-                                </Tooltip>,
-                                <Tooltip title="删除">
-                                    <Button
-                                        icon={<DeleteOutlined />}
-                                        type="link"
-                                        danger
-                                    />
-                                </Tooltip>,
-                            ]}
-                        >
-                            <Tag
-                                icon={<FileImageOutlined />}
-                                color={item.checked ? '#2db7f5' : 'blue'}
-                            >
-                                {item.filename}
-                            </Tag>
-                        </List.Item>
-                    )}
-                />
-                <Upload {...useUpload()}>
-                    <Button icon={<UploadOutlined />}>上传文件</Button>
-                </Upload>
+            <Sider
+                className="rs-sider-right"
+                width={300}
+                theme="light"
+            >
+                {fileList}
             </Sider>
         </Layout>
     );

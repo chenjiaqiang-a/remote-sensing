@@ -42,10 +42,10 @@ export function useRegister() {
 export function useLogin() {
     const [pending, setPending] = useState(false);
 
-    const handleLogin = (username, password) => {
+    const handleLogin = (email, password) => {
         setPending(true);
         const data = {
-            username,
+            email,
             password,
         };
         return new Promise((resolve, reject) => {
@@ -68,6 +68,35 @@ export function useLogin() {
 
     return {
         handleLogin,
+        pending
+    };
+}
+
+export function useLogout() {
+    const [pending, setPending] = useState(false);
+
+    const handleLogout = () => {
+        setPending(true);
+        return new Promise((resolve, reject) => {
+            request('/user/logout', {})
+                .then(res => {
+                    if (res.status === 200) {
+                        setPending(false);
+                        resolve(res.data);
+                    } else {
+                        throw Error('请求出错，请再次尝试！');
+                    }
+                })
+                .catch(err => {
+                    setPending(false);
+                    reject(err);
+                });
+        });
+
+    }
+
+    return {
+        handleLogout,
         pending
     };
 }

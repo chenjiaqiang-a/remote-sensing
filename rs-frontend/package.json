@@ -14,11 +14,14 @@
     "craco-less": "^1.20.0",
     "konva": "^8.3.10",
     "react": "^18.1.0",
+    "react-color": "^2.19.3",
     "react-dom": "^18.1.0",
     "react-error-overlay": "^6.0.9",
     "react-konva": "^18.2.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^4.0.3",
+    "resize-observer-polyfill": "^1.5.1",
+    "store": "^2.0.12",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -44,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://223.129.87.141:5000/"
 }

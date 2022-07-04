@@ -66,7 +66,7 @@ export const routes = [
             {
                 key: '/platform/',
                 index: true,
-                element: <Navigate to="/platform/target-extraction" />,
+                element: <Navigate to="/platform/target-extraction" replace />,
             },
         ],
     },
@@ -81,7 +81,7 @@ const RedirectToLogin = () => {
     const nav = useNavigate();
     useEffect(() => {
         message.info('您需要登录后才能访问该页面！');
-        nav('/login', { replace: true });
+        nav('/login');
     });
     return null;
 };

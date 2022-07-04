@@ -10,10 +10,12 @@ import {
     Typography,
     message,
 } from 'antd';
+import { useContext } from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logoImg from '../assets/images/logo.png';
-import { useLogin, useRegister } from '../hooks/loginHooks';
+import { useLogin, useRegister } from '../hooks';
+import { Context } from '../store';
 
 const { Footer, Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -27,12 +29,16 @@ const validateMessages = {
 
 const LoginForm = ({email}) => {
     const {handleLogin, pending} = useLogin();
+    const nav = useNavigate();
+    const { userStore } = useContext(Context);
     const handleFinish = async (values) => {
         try {
             const result = await handleLogin(values.email, values.password);
             if (result.code === 1) {
                 message.success(result.msg);
+                nav(-1);
                 // 记录用户信息
+                userStore.setLogin(values);
             } else {
                 throw Error('用户名或密码错误！');
             }
@@ -227,8 +233,9 @@ const RegisterForm = ({onRegistered}) => {
 };
 
 const Login = () => {
+    const { userStore: {userInfo} } = useContext(Context);
     const [tab, setTab] = useState('login');
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(userInfo.email);
 
     const handleRegistered = (value) => {
         setEmail(value);

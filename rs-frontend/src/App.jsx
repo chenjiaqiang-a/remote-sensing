@@ -1,23 +1,20 @@
-import { useState } from 'react';
 import { Layout } from 'antd';
+import { useContext } from 'react';
 import { Routes } from 'react-router-dom';
 
 import CustomHeader from './components/CustomHeader';
-
-import loginContext from './store/loginContext';
 import { renderRoutes, routes } from './config/routes';
+import { Context } from './store';
 
 function App() {
-    const [loginStatus, setLoginStatus] = useState(true);
+    const {
+        userStore: { userInfo },
+    } = useContext(Context);
     return (
-        <loginContext.Provider value={{loginStatus, setLoginStatus}}>
-            <Layout className="rs-app">
-                <CustomHeader />
-                <Routes>
-                    {renderRoutes(routes, loginStatus)}
-                </Routes>
-            </Layout>
-        </loginContext.Provider>
+        <Layout className="rs-app">
+            <CustomHeader />
+            <Routes>{renderRoutes(routes, userInfo.isLogin)}</Routes>
+        </Layout>
     );
 }
 

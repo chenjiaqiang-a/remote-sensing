@@ -1,27 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
+import getImageStore from './imageStore';
+import getUserStore from './userStore';
 
 export const Context = React.createContext({
-    userInfo: {},
-    imageList: [],
-    image: [],
-    setUserInfo: () => {},
-    setImageList: () => {},
-    setImage: () => {},
+    userStore: {},
+    imageStore: {},
 });
 
 export const Provider = ({ children }) => {
-    const [userInfo, setUserInfo] = useState({});
-    const [imageList, setImageList] = useState([]);
-    const [image, setImage] = useState([]);
+    const userStore = getUserStore();
+    const imageStore = getImageStore();
     return (
         <Context.Provider
             value={{
-                userInfo,
-                imageList,
-                image,
-                setUserInfo,
-                setImageList,
-                setImage,
+                userStore,
+                imageStore,
             }}
         >
             {children}
