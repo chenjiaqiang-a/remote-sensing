@@ -9,7 +9,7 @@ import {
     Slider,
     Switch,
 } from 'antd';
-import { EllipsisOutlined, UserOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 
 import ImageCanvas from '../components/ImageCanvas';
 import Mask from '../components/Mask';

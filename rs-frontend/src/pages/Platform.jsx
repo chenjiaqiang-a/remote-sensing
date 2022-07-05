@@ -21,14 +21,11 @@ import {
 import { debounce } from '../utils';
 import { useUpload } from '../hooks';
 import { platformMenu } from '../config/menu';
+import { useContext } from 'react';
+import { Context } from '../store';
+import { useEffect } from 'react';
 
 const { Sider, Content, Footer } = Layout;
-
-const testData = [...Array(15)].map((_, idx) => ({
-    id: idx,
-    checked: idx === 4,
-    filename: `${idx}-test.png`,
-}));
 
 const Platform = () => {
     let current = 'target-extraction';
@@ -37,16 +34,30 @@ const Platform = () => {
     if (paths.length > 2) {
         current = paths[paths.length - 1];
     }
+    const { imageStore } = useContext(Context);
+    
+
+    const [searchKey, setSearchKey] = useState('');
     const [currentKey, setCurrentKey] = useState(current);
-    const [listData, setListData] = useState(testData);
+    const [listData, setListData] = useState([]);
     const [collapsedLeft, setCollapsedLeft] = useState(false);
 
-    const handleFilterChange = debounce((e) => {
-        const text = e.target.value;
-        const newList = testData.filter(
-            (item) => item.filename.indexOf(text) !== -1
+    useEffect(()=> {
+        const initList = imageStore.imageList.map((item) => ({
+            id: item.id,
+            filename: item.filename,
+            checked: imageStore.selectedImages.findIndex((i) => i.id === item.id) !== -1,
+        }));
+
+        const newList = initList.filter(
+            (item) => item.filename.indexOf(searchKey) !== -1
         );
+
         setListData(newList);
+    }, [imageStore.imageList, imageStore.selectedImages, searchKey]);
+
+    const handleFilterChange = debounce((e) => {
+        setSearchKey(e.target.value);        
     }, 1000);
 
     const listHeader = (
@@ -122,11 +133,7 @@ const Platform = () => {
                     Remote Sensing ©2022 Created by 冲它吖的！
                 </Footer>
             </Layout>
-            <Sider
-                className="rs-sider-right"
-                width={300}
-                theme="light"
-            >
+            <Sider className="rs-sider-right" width={300} theme="light">
                 {fileList}
             </Sider>
         </Layout>

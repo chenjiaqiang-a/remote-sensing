@@ -16,7 +16,7 @@ import ImageCanvas from '../components/ImageCanvas';
 import testImg from '../assets/task/classes.jpg';
 import testMask from '../assets/task/classes-mask.png';
 import Mask from '../components/Mask';
-import { EllipsisOutlined, UserOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { BuildingIcon, RodeIcon, TreeIcon } from '../components/icons';
 

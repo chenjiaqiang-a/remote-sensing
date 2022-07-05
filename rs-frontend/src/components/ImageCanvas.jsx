@@ -14,7 +14,7 @@ const ImageCanvas = ({ imageNode, children }) => {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        const result = Math.min(width / imageNode.width, height / imageNode.height);
+        const result = Math.min(width / imageNode.width, height / imageNode.height, 10);
         setScale(result>1e-3?result:1e-3);
     }, [height, width, imageNode.width, imageNode.height]);
 

@@ -1,12 +1,6 @@
 import { useState } from "react";
 
-// const image = {
-//     filename: 'string',
-//     id: 'number',
-//     // selected: 'boolean',
-// };
-
-// const selectedImage = {
+// const imgObj = {
 //     id: 'number',
 //     filename: 'string',
 //     src: 'base64',
@@ -20,7 +14,7 @@ const useImageStore = () => {
         imageList,
         selectedImages,
         changeSelectedImage: (imgObj) => {
-            setSelectedImages(imgObj);
+            setSelectedImages([imgObj]);
             if (!imageList.find(img => img.id === imgObj.id)) {
                 setImageList([imgObj, ...imageList]);
             }

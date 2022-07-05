@@ -12,8 +12,6 @@ import {
 import FileUploader from '../components/FileUpload';
 import ImageCanvas from '../components/ImageCanvas';
 
-import testImg from '../assets/task/extract.png';
-import testMask from '../assets/task/extract-mask.png';
 import Mask from '../components/Mask';
 import ColorPicker from '../components/ColorPicker';
 import { EllipsisOutlined } from '@ant-design/icons';
@@ -26,8 +24,12 @@ const TargetExtraction = () => {
     const [opacity, setOpacity] = useState(1);
     const [maskColor, setMaskColor] = useState('#ff0000');
     const [fill, setFill] = useState(false);
+    
     const imageNode = new window.Image();
-    imageNode.src = testImg;
+    if (imageStore.selectedImages.length > 0) {
+        imageNode.src = imageStore.selectedImages[0].src;
+    }
+
     return (
         <div className="rs-target-extraction">
             <Row gutter={16} style={{ width: '100%', height: '100%' }}>
@@ -92,28 +94,19 @@ const TargetExtraction = () => {
                     </Space>
                 </Col>
                 <Col span={18}>
-                    <ImageCanvas imageNode={imageNode}>
-                        <Mask
-                            opacity={opacity}
-                            width={imageNode.width}
-                            height={imageNode.height}
-                            imgSrc={testMask}
-                            fill={fill}
-                        />
-                    </ImageCanvas>
-                    {/* {imageStore.selectedImages.length > 0 ? (
+                    {imageStore.selectedImages.length > 0 ? (
                         <ImageCanvas imageNode={imageNode}>
-                            <Mask
+                            {/* <Mask
                                 opacity={opacity}
                                 width={imageNode.width}
                                 height={imageNode.height}
                                 imgSrc={testMask}
                                 fill={fill}
-                            />
+                            /> */}
                         </ImageCanvas>
                     ) : (
                         <FileUploader />
-                    )} */}
+                    )}
                 </Col>
             </Row>
         </div>

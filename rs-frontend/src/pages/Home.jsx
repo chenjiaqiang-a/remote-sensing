@@ -19,9 +19,7 @@ const Home = () => {
                     <Typography style={{ maxWidth: 800 }}>
                         <Title style={{ fontSize: 64 }}>Remote Sensing</Title>
                         <Paragraph style={{ fontSize: 24, color: '#13227a' }}>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Voluptas deserunt quod eligendi possimus
-                            perspiciatis labore?
+                            AI赋能，打造多功能遥感影像分析处理平台，智能解析遥感图像，带给用户直观、便捷的使用体验
                         </Paragraph>
                         <Button
                             type="primary"
@@ -55,7 +53,7 @@ const Home = () => {
                             <Col span={8}>
                                 <img src={featureImg1} alt="feature-1" />
                                 <Typography style={{ textAlign: 'center' }}>
-                                    <Title level={3}>why choose us</Title>
+                                    <Title level={3}>智能</Title>
                                     <Paragraph>
                                         Lorem ipsum dolor sit amet consectetur
                                         adipisicing elit. Ea ducimus, odit
@@ -67,7 +65,7 @@ const Home = () => {
                             <Col span={8}>
                                 <img src={featureImg2} alt="feature-2" />
                                 <Typography style={{ textAlign: 'center' }}>
-                                    <Title level={3}>why choose us</Title>
+                                    <Title level={3}>便捷</Title>
                                     <Paragraph>
                                         Lorem ipsum dolor sit amet consectetur
                                         adipisicing elit. Ea ducimus, odit
@@ -79,7 +77,7 @@ const Home = () => {
                             <Col span={8}>
                                 <img src={featureImg3} alt="feature-3" />
                                 <Typography style={{ textAlign: 'center' }}>
-                                    <Title level={3}>why choose us</Title>
+                                    <Title level={3}>直观</Title>
                                     <Paragraph>
                                         Lorem ipsum dolor sit amet consectetur
                                         adipisicing elit. Ea ducimus, odit

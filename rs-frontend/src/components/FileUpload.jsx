@@ -2,10 +2,11 @@ import { Upload } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { useUpload } from '../hooks';
 
-const FileUploader = () => {
+const FileUploader = ({single = true}) => {
+    const uploadConfig = useUpload(single);
     return (
         <div className="rs-file-uploader">
-            <Upload.Dragger {...useUpload()}>
+            <Upload.Dragger {...uploadConfig}>
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                 </p>

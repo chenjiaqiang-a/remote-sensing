@@ -8,7 +8,7 @@ import {
     InputNumber,
     Slider,
 } from 'antd';
-import { EllipsisOutlined, UserOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 
 import FileUploader from '../components/FileUpload';
 import ImageCanvas from '../components/ImageCanvas';
