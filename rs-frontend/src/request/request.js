@@ -1,5 +1,7 @@
 import axios from "axios";
-import { requestConfig } from "../config/request";
+import {
+    requestConfig
+} from "../config/request";
 
 const instance = axios.create(requestConfig);
 

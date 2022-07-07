@@ -1,3 +1,4 @@
+import { useState, useContext, useEffect, useRef } from 'react';
 import {
     Row,
     Col,
@@ -8,23 +9,58 @@ import {
     Slider,
     Avatar,
     Switch,
+    message,
 } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
 
 import FileUploader from '../components/FileUpload';
 import ImageCanvas from '../components/ImageCanvas';
-
-import testImg from '../assets/task/classes.jpg';
-import testMask from '../assets/task/classes-mask.png';
 import Mask from '../components/Mask';
-import { EllipsisOutlined } from '@ant-design/icons';
-import { useState } from 'react';
 import { BuildingIcon, RodeIcon, TreeIcon } from '../components/icons';
+import { Context } from '../store';
+import { useFeatureClassification } from '../hooks';
+import { saveImage } from '../utils';
 
 const FeatureClassification = () => {
+    const { imageStore, detectionStore } = useContext(Context);
     const [opacity, setOpacity] = useState(1);
     const [fill, setFill] = useState(false);
+    const [maskSrc, setMaskSrc] = useState('');
+    const { detecting, handleDetection: detect } = useFeatureClassification();
+    const stageRef = useRef(null);
+
     const imageNode = new window.Image();
-    imageNode.src = testImg;
+    if (imageStore.selectedImages.length > 0) {
+        imageNode.src = imageStore.selectedImages[0].src;
+    }
+
+    const handleDetection = async () => {
+        detectionStore.setDetecting();
+        try {
+            const result = await detect(imageStore.selectedImages[0]);
+            if (result.code === 200) {
+                setMaskSrc('data:image/png;base64,' + result.data);
+                detectionStore.setDone();
+            } else {
+                throw Error('检测失败！');
+            }
+        } catch (error) {
+            message.error(error.message);
+            detectionStore.setPreparing();
+        }
+    };
+
+    const handleSave = () => {
+        const dataUrl = stageRef.current.toDataURL();
+        saveImage(dataUrl, 'feature-classification.png');
+    };
+
+    useEffect(() => {
+        if (!imageStore.isInMode('feature-classification')) {
+            imageStore.setMode('feature-classification');
+        }
+    }, [imageStore]);
+
     return (
         <div className="rs-feature-classification">
             <Row gutter={16} style={{ width: '100%', height: '100%' }}>
@@ -71,11 +107,13 @@ const FeatureClassification = () => {
                             max={1}
                             step={0.02}
                             value={opacity}
+                            disabled={!detectionStore.isDone()}
                             onChange={(value) => setOpacity(value)}
                         />
                         <h4>只显示遮罩</h4>
                         <Switch
                             checked={fill}
+                            disabled={!detectionStore.isDone()}
                             onChange={(v) => {
                                 setFill(v);
                                 setOpacity(1);
@@ -86,23 +124,40 @@ const FeatureClassification = () => {
                         direction="vertical"
                         style={{ width: '100%', marginTop: 'auto' }}
                     >
-                        <Button style={{ width: '100%' }} type="primary">
+                        <Button
+                            disabled={imageStore.selectedImages.length < 1}
+                            loading={detecting}
+                            onClick={handleDetection}
+                            style={{ width: '100%' }}
+                            type="primary"
+                        >
                             开始检测
                         </Button>
-                        <Button style={{ width: '100%' }}>保存结果</Button>
+                        <Button
+                            disabled={!detectionStore.isDone()}
+                            onClick={handleSave}
+                            style={{ width: '100%' }}
+                        >
+                            保存结果
+                        </Button>
                     </Space>
                 </Col>
                 <Col span={18}>
-                    <ImageCanvas imageNode={imageNode}>
-                        <Mask
-                            opacity={opacity}
-                            width={imageNode.width}
-                            height={imageNode.height}
-                            imgSrc={testMask}
-                            fill={fill}
-                        />
-                    </ImageCanvas>
-                    {/* <FileUploader /> */}
+                    {imageStore.selectedImages.length > 0 ? (
+                        <ImageCanvas stageRef={stageRef} imageNode={imageNode}>
+                            {detectionStore.isDone() && (
+                                <Mask
+                                    opacity={opacity}
+                                    width={imageNode.width}
+                                    height={imageNode.height}
+                                    imgSrc={maskSrc}
+                                    fill={fill}
+                                />
+                            )}
+                        </ImageCanvas>
+                    ) : (
+                        <FileUploader />
+                    )}
                 </Col>
             </Row>
         </div>

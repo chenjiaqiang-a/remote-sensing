@@ -1,3 +1,4 @@
+import { useState, useContext, useEffect, useRef } from 'react';
 import {
     Row,
     Col,
@@ -7,25 +8,60 @@ import {
     Tooltip,
     InputNumber,
     Slider,
+    message,
 } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 import FileUploader from '../components/FileUpload';
 import ImageCanvas from '../components/ImageCanvas';
 import ColorPicker from '../components/ColorPicker';
-
 import Anchor from '../components/Anchor';
-import testImg from '../assets/images/bg-01.jpg';
-import { useState } from 'react';
 import { PlaygroundIcon } from '../components/icons';
+import { Context } from '../store';
+import { useObjectDetection } from '../hooks';
+import { saveImage } from '../utils';
 
 const ObjectDetection = () => {
-    const imageNode = new window.Image();
-    imageNode.src = testImg;
+    const { imageStore, detectionStore } = useContext(Context);
     const [anchorWidth, setAnchorWidth] = useState(4);
     const [threshold, setThreshold] = useState(0.8);
     const [anchorColor, setAnchorColor] = useState('#000');
     const [labelColor, setLabelColor] = useState('#fff');
+    const [bboxes, setBboxes] = useState([]);
+    const { detecting, handleDetection: detect } = useObjectDetection();
+    const stageRef = useRef(null);
+
+    const imageNode = new window.Image();
+    if (imageStore.selectedImages.length > 0) {
+        imageNode.src = imageStore.selectedImages[0].src;
+    }
+
+    const handleDetection = async () => {
+        detectionStore.setDetecting();
+        try {
+            const result = await detect(imageStore.selectedImages[0]);
+            if (result.code === 200) {
+                setBboxes(result.data);
+                detectionStore.setDone();
+            } else {
+                throw Error('检测失败！');
+            }
+        } catch (error) {
+            message.error(error.message);
+            detectionStore.setPreparing();
+        }
+    };
+
+    const handleSave = () => {
+        const dataUrl = stageRef.current.toDataURL();
+        saveImage(dataUrl, 'object-detection.png');
+    };
+
+    useEffect(() => {
+        if (!imageStore.isInMode('object-detection')) {
+            imageStore.setMode('object-detection');
+        }
+    }, [imageStore]);
 
     return (
         <div className="rs-object-detection">
@@ -87,25 +123,50 @@ const ObjectDetection = () => {
                         direction="vertical"
                         style={{ width: '100%', marginTop: 'auto' }}
                     >
-                        <Button style={{ width: '100%' }} type="primary">
+                        <Button
+                            disabled={imageStore.selectedImages.length < 1}
+                            onClick={handleDetection}
+                            loading={detecting}
+                            style={{ width: '100%' }}
+                            type="primary"
+                        >
                             开始检测
                         </Button>
-                        <Button style={{ width: '100%' }}>保存结果</Button>
+                        <Button
+                            disabled={!detectionStore.isDone()}
+                            style={{ width: '100%' }}
+                            onClick={handleSave}
+                        >
+                            保存结果
+                        </Button>
                     </Space>
                 </Col>
                 <Col span={18}>
-                    <ImageCanvas imageNode={imageNode}>
-                        <Anchor
-                            anchorWidth={anchorWidth}
-                            label="label"
-                            color={anchorColor}
-                            labelColor={labelColor}
-                            x={100}
-                            y={100}
-                            width={400}
-                            height={400}
-                        />
-                    </ImageCanvas>
+                    {imageStore.selectedImages.length > 0 ? (
+                        <ImageCanvas stageRef={stageRef} imageNode={imageNode}>
+                            {detectionStore.isDone() &&
+                                bboxes
+                                    .filter((bbox) => bbox.score >= threshold)
+                                    .sort((a, b) => a.score - b.score)
+                                    .map((bbox) => (
+                                        <Anchor
+                                            key={bbox.score.toString()}
+                                            anchorWidth={anchorWidth}
+                                            label={`${
+                                                bbox.category
+                                            } ${bbox.score.toFixed(2)}`}
+                                            color={anchorColor}
+                                            labelColor={labelColor}
+                                            x={bbox.bbox[0]}
+                                            y={bbox.bbox[1]}
+                                            width={bbox.bbox[2]}
+                                            height={bbox.bbox[3]}
+                                        />
+                                    ))}
+                        </ImageCanvas>
+                    ) : (
+                        <FileUploader />
+                    )}
                 </Col>
             </Row>
         </div>

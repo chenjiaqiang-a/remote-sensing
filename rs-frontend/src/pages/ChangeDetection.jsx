@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import {
     Row,
     Col,
@@ -19,6 +19,7 @@ import ColorPicker from '../components/ColorPicker';
 import { BuildingIcon } from '../components/icons';
 import { Context } from '../store';
 import { useChangeDetection } from '../hooks';
+import { saveImage } from '../utils';
 
 const ChangeDetection = () => {
     const { imageStore, detectionStore } = useContext(Context);
@@ -31,6 +32,8 @@ const ChangeDetection = () => {
     const [fillLeft, setFillLeft] = useState(false);
     const [fillRight, setFillRight] = useState(false);
     const { detecting, handleDetection: detect } = useChangeDetection();
+    const stageLeftRef = useRef(null);
+    const stageRightRef = useRef(null);
 
     const imageNodeLeft = new window.Image();
     if (imageStore.selectedImages.length > 0) {
@@ -49,7 +52,7 @@ const ChangeDetection = () => {
                 imageStore.selectedImages[0],
                 maskColorLeft,
                 imageStore.selectedImages[1],
-                maskColorRight,
+                maskColorRight
             );
             if (result[0].code === 200 && result[1].code === 200) {
                 setMaskSrcLeft('data:image/png;base64,' + result[0].data);
@@ -63,6 +66,12 @@ const ChangeDetection = () => {
             detectionStore.setPreparing();
         }
     };
+
+    useEffect(() => {
+        if (!imageStore.isInMode('change-detection')) {
+            imageStore.setMode('change-detection');
+        }
+    }, [imageStore]);
 
     return (
         <div className="rs-change-detection">
@@ -138,12 +147,25 @@ const ChangeDetection = () => {
                             开始检测
                         </Button>
                         <Button
+                            onClick={() => {
+                                const dataUrl =
+                                    stageLeftRef.current.toDataURL();
+                                saveImage(dataUrl, 'change-detection-left.png');
+                            }}
                             disabled={!detectionStore.isDone()}
                             style={{ width: '100%' }}
                         >
                             保存结果(左)
                         </Button>
                         <Button
+                            onClick={() => {
+                                const dataUrl =
+                                    stageRightRef.current.toDataURL();
+                                saveImage(
+                                    dataUrl,
+                                    'change-detection-right.png'
+                                );
+                            }}
                             disabled={!detectionStore.isDone()}
                             style={{ width: '100%' }}
                         >
@@ -164,7 +186,10 @@ const ChangeDetection = () => {
                         />
                     </div>
                     {imageStore.selectedImages.length > 0 ? (
-                        <ImageCanvas imageNode={imageNodeLeft}>
+                        <ImageCanvas
+                            stageRef={stageLeftRef}
+                            imageNode={imageNodeLeft}
+                        >
                             {detectionStore.isDone() && (
                                 <Mask
                                     opacity={opacityLeft}
@@ -192,7 +217,10 @@ const ChangeDetection = () => {
                         />
                     </div>
                     {imageStore.selectedImages.length > 1 ? (
-                        <ImageCanvas imageNode={imageNodeRight}>
+                        <ImageCanvas
+                            stageRef={stageRightRef}
+                            imageNode={imageNodeRight}
+                        >
                             {detectionStore.isDone() && (
                                 <Mask
                                     opacity={opacityRight}

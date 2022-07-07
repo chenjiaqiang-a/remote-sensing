@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import {
     Row,
     Col,
@@ -19,6 +19,7 @@ import ColorPicker from '../components/ColorPicker';
 import { RodeIcon } from '../components/icons';
 import { Context } from '../store';
 import { useTargetExtraction } from '../hooks';
+import { saveImage } from '../utils';
 
 const TargetExtraction = () => {
     const { imageStore, detectionStore } = useContext(Context);
@@ -27,6 +28,7 @@ const TargetExtraction = () => {
     const [fill, setFill] = useState(false);
     const [maskSrc, setMaskSrc] = useState('');
     const { detecting, handleDetection: detect } = useTargetExtraction();
+    const stageRef = useRef(null);
 
     const imageNode = new window.Image();
     if (imageStore.selectedImages.length > 0) {
@@ -51,6 +53,17 @@ const TargetExtraction = () => {
             detectionStore.setPreparing();
         }
     };
+
+    const handleSave = () => {
+        const dataUrl = stageRef.current.toDataURL();
+        saveImage(dataUrl, 'target-extraction.png');
+    };
+
+    useEffect(() => {
+        if (!imageStore.isInMode('target-extraction')) {
+            imageStore.setMode('target-extraction');
+        }
+    }, [imageStore]);
 
     return (
         <div className="rs-target-extraction">
@@ -112,6 +125,7 @@ const TargetExtraction = () => {
                         style={{ width: '100%', marginTop: 'auto' }}
                     >
                         <Button
+                            disabled={imageStore.selectedImages.length < 1}
                             onClick={handleDetection}
                             loading={detecting}
                             style={{ width: '100%' }}
@@ -120,6 +134,7 @@ const TargetExtraction = () => {
                             开始检测
                         </Button>
                         <Button
+                            onClick={handleSave}
                             disabled={!detectionStore.isDone()}
                             style={{ width: '100%' }}
                         >
@@ -129,7 +144,7 @@ const TargetExtraction = () => {
                 </Col>
                 <Col span={18}>
                     {imageStore.selectedImages.length > 0 ? (
-                        <ImageCanvas imageNode={imageNode}>
+                        <ImageCanvas stageRef={stageRef} imageNode={imageNode}>
                             {detectionStore.isDone() && (
                                 <Mask
                                     opacity={opacity}

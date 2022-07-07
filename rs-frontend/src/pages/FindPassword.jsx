@@ -1,5 +1,14 @@
-import { Form, Layout, Typography, Input, Row, Col, Button, message } from "antd";
-import { useRef } from "react";
+import {
+    Form,
+    Layout,
+    Typography,
+    Input,
+    Row,
+    Col,
+    Button,
+    message,
+} from 'antd';
+import { useRef } from 'react';
 
 const { Content, Footer } = Layout;
 const { Title, Text } = Typography;
@@ -8,7 +17,7 @@ const validateMessages = {
     required: '此项不能为空！',
     types: {
         email: '电子邮件格式不正确！',
-    }
+    },
 };
 
 const FindPassword = () => {
@@ -17,7 +26,7 @@ const FindPassword = () => {
     const handleGetCaptcha = () => {
         const email = emailRef.current.input.value;
         if (!email) {
-            message.warning("先请输入邮箱地址！");
+            message.warning('先请输入邮箱地址！');
             return;
         }
         console.log(email);
@@ -30,19 +39,17 @@ const FindPassword = () => {
     return (
         <Layout className="rs-find-password">
             <Content>
-                <Typography style={{maxWidth: 300, margin: '40px auto 0'}}>
-                    <Title level={2}>
-                        找回密码
-                    </Title>
-                    <Text style={{color: '#13227a'}}>
+                <Typography style={{ maxWidth: 300, margin: '40px auto 0' }}>
+                    <Title level={2}>找回密码</Title>
+                    <Text style={{ color: '#13227a' }}>
                         请输入需要找回密码的邮箱地址，我们将发送验证码邮件，请注意查收。
                     </Text>
                 </Typography>
                 <Form
                     name="find-password"
-                    style={{maxWidth: 400, margin: '20px auto 0'}}
-                    labelCol={{xs: {span: 24}, sm: {span: 8}}}
-                    wrapperCol={{xs: {span: 24}, sm: {span: 16}}}
+                    style={{ maxWidth: 400, margin: '20px auto 0' }}
+                    labelCol={{ xs: { span: 24 }, sm: { span: 8 } }}
+                    wrapperCol={{ xs: { span: 24 }, sm: { span: 16 } }}
                     onFinish={handleFinish}
                     scrollToFirstError
                     validateMessages={validateMessages}
@@ -50,7 +57,7 @@ const FindPassword = () => {
                     <Form.Item
                         name="email"
                         label="邮箱地址"
-                        rules={[{type: 'email'},{required: true}]}
+                        rules={[{ type: 'email' }, { required: true }]}
                     >
                         <Input ref={emailRef} />
                     </Form.Item>
@@ -60,20 +67,22 @@ const FindPassword = () => {
                                 <Form.Item
                                     name="captcha"
                                     noStyle
-                                    rules={[{ required: true}]}
+                                    rules={[{ required: true }]}
                                 >
                                     <Input />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Button onClick={handleGetCaptcha}>获取验证码</Button>
+                                <Button onClick={handleGetCaptcha}>
+                                    获取验证码
+                                </Button>
                             </Col>
                         </Row>
                     </Form.Item>
                     <Form.Item
                         name="password"
                         label="新密码"
-                        rules={[{required: true}]}
+                        rules={[{ required: true }]}
                         hasFeedback
                     >
                         <Input.Password />
@@ -84,21 +93,33 @@ const FindPassword = () => {
                         dependencies={['password']}
                         hasFeedback
                         rules={[
-                            {required: true},
+                            { required: true },
                             ({ getFieldValue }) => ({
                                 validator(_, value) {
-                                    if (!value || getFieldValue('password') === value) {
+                                    if (
+                                        !value ||
+                                        getFieldValue('password') === value
+                                    ) {
                                         return Promise.resolve();
                                     }
-                                    return Promise.reject(new Error('两次输入的密码不匹配！'));
-                                }
-                            })
+                                    return Promise.reject(
+                                        new Error('两次输入的密码不匹配！')
+                                    );
+                                },
+                            }),
                         ]}
                     >
                         <Input.Password />
                     </Form.Item>
-                    <Form.Item wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 16, offset: 8}}}>
-                        <Button type="primary" htmlType="submit">修改密码</Button>
+                    <Form.Item
+                        wrapperCol={{
+                            xs: { span: 24, offset: 0 },
+                            sm: { span: 16, offset: 8 },
+                        }}
+                    >
+                        <Button type="primary" htmlType="submit">
+                            修改密码
+                        </Button>
                     </Form.Item>
                 </Form>
             </Content>
@@ -107,6 +128,6 @@ const FindPassword = () => {
             </Footer>
         </Layout>
     );
-}
- 
+};
+
 export default FindPassword;

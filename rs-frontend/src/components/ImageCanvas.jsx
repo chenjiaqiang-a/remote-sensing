@@ -1,21 +1,24 @@
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { Space, Button } from 'antd';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Layer, Stage, Image, Group } from 'react-konva';
 
 let observer = null;
 
-const ImageCanvas = ({ imageNode, children }) => {
+const ImageCanvas = ({ imageNode, children, stageRef }) => {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
     const [scale, setScale] = useState(1);
     const containerRef = useRef(null);
+    // const stageRef = useRef(null);
 
     useEffect(() => {
-        const result = Math.min(width / imageNode.width, height / imageNode.height, 10);
-        setScale(result>1e-3?result:1e-3);
+        const result = Math.min(
+            width / imageNode.width,
+            height / imageNode.height,
+            10
+        );
+        setScale(result > 1e-3 ? result : 1e-3);
     }, [height, width, imageNode.width, imageNode.height]);
 
     useEffect(() => {
@@ -39,7 +42,7 @@ const ImageCanvas = ({ imageNode, children }) => {
         <div className="rs-image-canvas">
             <div ref={containerRef} className="canvas-display">
                 <Stage width={width} height={height}>
-                    <Layer scaleX={scale} scaleY={scale}>
+                    <Layer ref={stageRef} scaleX={scale} scaleY={scale}>
                         <Group
                             draggable
                             x={(width / scale - imageNode.width) / 2}

@@ -18,11 +18,11 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-
-import logoImg from '../assets/images/logo.png';
 import { useContext } from 'react';
+
 import { Context } from '../store';
 import { useLogout } from '../hooks';
+import logoImg from '../assets/images/logo.png';
 
 const { Header } = Layout;
 
@@ -48,7 +48,7 @@ const CustomHeader = () => {
                         message.success('登出成功！');
                         userStore.setLogout();
                     } else {
-                        throw Error('登出失败！')
+                        throw Error('登出失败！');
                     }
                 } catch (error) {
                     message.error(error.message);

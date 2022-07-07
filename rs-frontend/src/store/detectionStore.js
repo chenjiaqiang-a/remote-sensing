@@ -1,4 +1,6 @@
-import { useState } from "react";
+import {
+    useState
+} from "react";
 
 const DetectionStatus = {
     Preparing: 0,

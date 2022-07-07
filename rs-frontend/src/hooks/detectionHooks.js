@@ -22,7 +22,6 @@ const useDetection = (mode) => {
             mode: MODE[mode],
             color: param.color,
         };
-        console.log(toDetectionParam(data));
         return new Promise((resolve, reject) => {
             request('/detection', toDetectionParam(data))
                 .then(res => {
@@ -103,10 +102,10 @@ export const useObjectDetection = () => {
 
     return {
         detecting: pending,
-        handleDetection: (imgObj, color) => {
+        handleDetection: (imgObj) => {
             const params = {
                 images: [imgObj.filename],
-                color: color,
+                color: '#ff0000',
             };
             return handleDetection(params);
         },
@@ -121,10 +120,10 @@ export const useFeatureClassification = () => {
 
     return {
         detecting: pending,
-        handleDetection: (imgObj, color) => {
+        handleDetection: (imgObj) => {
             const params = {
                 images: [imgObj.filename],
-                color: color,
+                color: '#ff0000',
             };
             return handleDetection(params);
         },

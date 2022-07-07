@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import featureImg1 from '../assets/images/feature-01.png';
 import featureImg2 from '../assets/images/feature-02.png';
 import featureImg3 from '../assets/images/feature-03.png';
+import aboutImg1 from '../assets/images/about-1.png';
+import aboutImg2 from '../assets/images/about-2.png';
+import aboutImg3 from '../assets/images/about-3.png';
+import aboutImg4 from '../assets/images/about-4.png';
 
 const { Title, Paragraph } = Typography;
 
@@ -43,10 +47,8 @@ const Home = () => {
                                 why choose us
                             </Title>
                             <Paragraph>
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Ea ducimus, odit repellendus
-                                officia ab optio qui fugit voluptatum alias
-                                quis?
+                                Remote Sensing
+                                作为一个基于深度学习的遥感图像分析平台，基于智能、便捷、直观的设计理念，希望带给感兴趣的同学和科研工作者更加满意的体验。
                             </Paragraph>
                         </Typography>
                         <Row gutter={16}>
@@ -55,10 +57,9 @@ const Home = () => {
                                 <Typography style={{ textAlign: 'center' }}>
                                     <Title level={3}>智能</Title>
                                     <Paragraph>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Ea ducimus, odit
-                                        repellendus officia ab optio qui fugit
-                                        voluptatum alias quis?
+                                        使用最新的遥感图像分析的深度学习模型，经由
+                                        PaddlePaddle 平台和 PaddleRS
+                                        遥感算法包训练以及部署，得到可靠而智能的模型。
                                     </Paragraph>
                                 </Typography>
                             </Col>
@@ -67,10 +68,9 @@ const Home = () => {
                                 <Typography style={{ textAlign: 'center' }}>
                                     <Title level={3}>便捷</Title>
                                     <Paragraph>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Ea ducimus, odit
-                                        repellendus officia ab optio qui fugit
-                                        voluptatum alias quis?
+                                        无需下载安装，直接在网页端即可访问
+                                        Remote Sensing
+                                        平台，简单地上传遥感图像选择少量参数，便可得到满意的检测结果
                                     </Paragraph>
                                 </Typography>
                             </Col>
@@ -79,10 +79,7 @@ const Home = () => {
                                 <Typography style={{ textAlign: 'center' }}>
                                     <Title level={3}>直观</Title>
                                     <Paragraph>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Ea ducimus, odit
-                                        repellendus officia ab optio qui fugit
-                                        voluptatum alias quis?
+                                        平台在遥感图像分析和结果展示时，将原本的图片和检测结果有机地结合，使得用户可以二次定义结果的表现形式，以期达到直观的视觉效果。
                                     </Paragraph>
                                 </Typography>
                             </Col>
@@ -102,15 +99,12 @@ const Home = () => {
                                 what can we do
                             </Title>
                             <Paragraph>
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Aliquid provident dolore
-                                repellendus assumenda sit in dicta amet hic
-                                debitis ducimus?
+                                基于深度学习算法，我们的平台可以提供目标提取、变化检测、目标检测、地物分类四大功能，使用直观的展示方法将结果呈现给用户，并允许用户自定义结果的表现，方便进行结果展示。
                             </Paragraph>
                         </Typography>
                         <Row gutter={16} className="about-card">
-                            <Col span={10}>
-                                <img src={featureImg1} alt="about-1" />
+                            <Col className="about-img" span={10}>
+                                <img src={aboutImg1} alt="about-1" />
                             </Col>
                             <Col span={14} className="about-desc">
                                 <Typography>
@@ -121,23 +115,7 @@ const Home = () => {
                                         目标提取
                                     </Title>
                                     <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Tempora minus hic,
-                                        nesciunt mollitia alias veritatis
-                                        voluptatibus, nemo quaerat totam
-                                        accusantium unde voluptates enim,
-                                        corporis voluptatem. Repudiandae
-                                        expedita itaque hic, illum ipsum,
-                                        asperiores obcaecati cupiditate fugiat
-                                        dicta quia repellat nihil? Quibusdam.
-                                    </Paragraph>
-                                    <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Magnam magni aliquam
-                                        quod perspiciatis quisquam quas quam
-                                        necessitatibus, odio error culpa iusto
-                                        iste. Itaque doloremque officia odio vel
-                                        dolores! Nobis, beatae.
+                                        使用图像分割技术对卫星图像中指定对象进行提取，能够快速了解该区域中目标对象的位置区域，为地区的规划建设、农林资源的合理利用提供参考方案。
                                     </Paragraph>
                                     <Paragraph style={{ textAlign: 'center' }}>
                                         <Button
@@ -166,23 +144,7 @@ const Home = () => {
                                         变化检测
                                     </Title>
                                     <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Tempora minus hic,
-                                        nesciunt mollitia alias veritatis
-                                        voluptatibus, nemo quaerat totam
-                                        accusantium unde voluptates enim,
-                                        corporis voluptatem. Repudiandae
-                                        expedita itaque hic, illum ipsum,
-                                        asperiores obcaecati cupiditate fugiat
-                                        dicta quia repellat nihil? Quibusdam.
-                                    </Paragraph>
-                                    <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Magnam magni aliquam
-                                        quod perspiciatis quisquam quas quam
-                                        necessitatibus, odio error culpa iusto
-                                        iste. Itaque doloremque officia odio vel
-                                        dolores! Nobis, beatae.
+                                        使用图像分割技术对同区域不同时期的卫星图像变化情况完成分析，能够快速获取不同时期该区域的地理变化信息，推测该区域的发展情况，进一步完善城建工作，更新地形测绘，为探究全球宏观问题提供条件。
                                     </Paragraph>
                                     <Paragraph style={{ textAlign: 'center' }}>
                                         <Button
@@ -200,13 +162,13 @@ const Home = () => {
                                     </Paragraph>
                                 </Typography>
                             </Col>
-                            <Col span={10}>
-                                <img src={featureImg1} alt="about-2" />
+                            <Col className="about-img" span={10}>
+                                <img src={aboutImg2} alt="about-2" />
                             </Col>
                         </Row>
                         <Row gutter={16} className="about-card">
-                            <Col span={10}>
-                                <img src={featureImg1} alt="about-3" />
+                            <Col className="about-img" span={10}>
+                                <img src={aboutImg3} alt="about-3" />
                             </Col>
                             <Col span={14} className="about-desc">
                                 <Typography>
@@ -217,23 +179,7 @@ const Home = () => {
                                         目标检测
                                     </Title>
                                     <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Tempora minus hic,
-                                        nesciunt mollitia alias veritatis
-                                        voluptatibus, nemo quaerat totam
-                                        accusantium unde voluptates enim,
-                                        corporis voluptatem. Repudiandae
-                                        expedita itaque hic, illum ipsum,
-                                        asperiores obcaecati cupiditate fugiat
-                                        dicta quia repellat nihil? Quibusdam.
-                                    </Paragraph>
-                                    <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Magnam magni aliquam
-                                        quod perspiciatis quisquam quas quam
-                                        necessitatibus, odio error culpa iusto
-                                        iste. Itaque doloremque officia odio vel
-                                        dolores! Nobis, beatae.
+                                        使用目标检测技术对卫星图像中指定对象完成检测，目前支持对象为操场，后续将针对不同对象进行深入开发。
                                     </Paragraph>
                                     <Paragraph style={{ textAlign: 'center' }}>
                                         <Button
@@ -262,23 +208,7 @@ const Home = () => {
                                         地物分类
                                     </Title>
                                     <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Tempora minus hic,
-                                        nesciunt mollitia alias veritatis
-                                        voluptatibus, nemo quaerat totam
-                                        accusantium unde voluptates enim,
-                                        corporis voluptatem. Repudiandae
-                                        expedita itaque hic, illum ipsum,
-                                        asperiores obcaecati cupiditate fugiat
-                                        dicta quia repellat nihil? Quibusdam.
-                                    </Paragraph>
-                                    <Paragraph style={{ fontSize: 16 }}>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Magnam magni aliquam
-                                        quod perspiciatis quisquam quas quam
-                                        necessitatibus, odio error culpa iusto
-                                        iste. Itaque doloremque officia odio vel
-                                        dolores! Nobis, beatae.
+                                        使用图像分割技术对卫星图像每个像素完成分类，能够使用户获取该区域地表组成的大致划分，对该区域的环境质量评价，道路交通分析，土地利用具有重大意义。
                                     </Paragraph>
                                     <Paragraph style={{ textAlign: 'center' }}>
                                         <Button
@@ -296,8 +226,8 @@ const Home = () => {
                                     </Paragraph>
                                 </Typography>
                             </Col>
-                            <Col span={10}>
-                                <img src={featureImg1} alt="about-4" />
+                            <Col className="about-img" span={10}>
+                                <img src={aboutImg4} alt="about-4" />
                             </Col>
                         </Row>
                     </div>

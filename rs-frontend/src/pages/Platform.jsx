@@ -72,6 +72,35 @@ const Platform = () => {
         </div>
     );
 
+    const handleImgChange = (item) => {
+        if (detectionStore.isDetecting()) {
+            message.warning('检测中，禁止切换图片！');
+            return;
+        }
+        if (detectionStore.isDone()) {
+            Modal.confirm({
+                title: '确定切换图片吗？',
+                content:
+                    '本功能下您已有检测结果，请妥善保存检测结果，如果切换图片将会丢失本次结果。',
+                onOk: () => {
+                    detectionStore.setPreparing();
+                    imageStore.changeSelectedImage({
+                        id: item.id,
+                        filename: item.filename,
+                        src: item.src,
+                    });
+                },
+            });
+        }
+        if (detectionStore.isPreParing()) {
+            imageStore.changeSelectedImage({
+                id: item.id,
+                filename: item.filename,
+                src: item.src,
+            });
+        }
+    };
+
     const fileList = (
         <>
             <List
@@ -83,19 +112,18 @@ const Platform = () => {
                         actions={[
                             <Tooltip title="选择">
                                 <Button
-                                    onClick={() =>
-                                        imageStore.changeSelectedImage({
-                                            id: item.id,
-                                            filename: item.filename,
-                                            src: item.src,
-                                        })
-                                    }
+                                    disabled={item.checked}
+                                    onClick={() => handleImgChange(item)}
                                     icon={<SelectOutlined />}
                                     type="link"
                                 />
                             </Tooltip>,
                             <Tooltip title="删除">
                                 <Button
+                                    disabled={
+                                        item.checked &&
+                                        detectionStore.isDetecting()
+                                    }
                                     onClick={() =>
                                         imageStore.deleteImage(item.id)
                                     }
@@ -133,14 +161,20 @@ const Platform = () => {
                     '本功能下您已有检测结果，请妥善保存检测结果，如果切换功能将会丢失本次结果。',
                 onOk: () => {
                     detectionStore.setPreparing();
-                    imageStore.setSelectedImages([imageStore.selectedImages[0]])
+                    if (imageStore.selectedImages.length > 0) {
+                        imageStore.setSelectedImages([
+                            imageStore.selectedImages[0],
+                        ]);
+                    }
                     setCurrentKey(e.key);
                     nav(`/platform/${e.key}`);
                 },
             });
         }
         if (detectionStore.isPreParing()) {
-            imageStore.setSelectedImages([imageStore.selectedImages[0]])
+            if (imageStore.selectedImages.length > 0) {
+                imageStore.setSelectedImages([imageStore.selectedImages[0]]);
+            }
             setCurrentKey(e.key);
             nav(`/platform/${e.key}`);
         }

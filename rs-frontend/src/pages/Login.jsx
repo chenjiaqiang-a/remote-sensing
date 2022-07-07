@@ -10,9 +10,9 @@ import {
     Typography,
     message,
 } from 'antd';
-import { useContext } from 'react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import logoImg from '../assets/images/logo.png';
 import { useLogin, useRegister } from '../hooks';
 import { Context } from '../store';
@@ -27,8 +27,8 @@ const validateMessages = {
     },
 };
 
-const LoginForm = ({email}) => {
-    const {handleLogin, pending} = useLogin();
+const LoginForm = ({ email }) => {
+    const { handleLogin, pending } = useLogin();
     const nav = useNavigate();
     const { userStore } = useContext(Context);
     const handleFinish = async (values) => {
@@ -120,8 +120,8 @@ const agreementContent = (
     </Typography>
 );
 
-const RegisterForm = ({onRegistered}) => {
-    const {handleRegister, pending} = useRegister();
+const RegisterForm = ({ onRegistered }) => {
+    const { handleRegister, pending } = useRegister();
     const handleFinish = async (values) => {
         try {
             const result = await handleRegister(values);
@@ -133,7 +133,6 @@ const RegisterForm = ({onRegistered}) => {
         } catch (err) {
             message.error(err.message);
         }
-        
     };
 
     const showAgreement = () => {
@@ -233,7 +232,9 @@ const RegisterForm = ({onRegistered}) => {
 };
 
 const Login = () => {
-    const { userStore: {userInfo} } = useContext(Context);
+    const {
+        userStore: { userInfo },
+    } = useContext(Context);
     const [tab, setTab] = useState('login');
     const [email, setEmail] = useState(userInfo.email);
 
@@ -263,7 +264,7 @@ const Login = () => {
                 <Tabs
                     style={{ maxWidth: 400, margin: '0 auto' }}
                     activeKey={tab}
-                    onChange={activeKey => setTab(activeKey)}
+                    onChange={(activeKey) => setTab(activeKey)}
                     centered
                     destroyInactiveTabPane
                     size="large"

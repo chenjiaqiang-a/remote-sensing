@@ -120,7 +120,11 @@ export function renderRoutes(routes, isLogin) {
         }
         if (route.path && route.path === 'login' && isLogin) {
             return (
-                <Route key={route.key} path={route.path} element={<Navigate to="/" replace />} />
+                <Route
+                    key={route.key}
+                    path={route.path}
+                    element={<Navigate to="/" replace />}
+                />
             );
         }
         return renderRoute(route);
