@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     Layout,
     Menu,
@@ -9,8 +9,10 @@ import {
     Tag,
     Tooltip,
     Upload,
+    message,
+    Modal,
 } from 'antd';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
     DeleteOutlined,
     FileImageOutlined,
@@ -21,9 +23,7 @@ import {
 import { debounce } from '../utils';
 import { useUpload } from '../hooks';
 import { platformMenu } from '../config/menu';
-import { useContext } from 'react';
 import { Context } from '../store';
-import { useEffect } from 'react';
 
 const { Sider, Content, Footer } = Layout;
 
@@ -34,19 +34,20 @@ const Platform = () => {
     if (paths.length > 2) {
         current = paths[paths.length - 1];
     }
-    const { imageStore } = useContext(Context);
-    
+    const { imageStore, detectionStore } = useContext(Context);
 
     const [searchKey, setSearchKey] = useState('');
     const [currentKey, setCurrentKey] = useState(current);
     const [listData, setListData] = useState([]);
     const [collapsedLeft, setCollapsedLeft] = useState(false);
+    const nav = useNavigate();
 
-    useEffect(()=> {
+    useEffect(() => {
         const initList = imageStore.imageList.map((item) => ({
-            id: item.id,
-            filename: item.filename,
-            checked: imageStore.selectedImages.findIndex((i) => i.id === item.id) !== -1,
+            ...item,
+            checked:
+                imageStore.selectedImages.findIndex((i) => i.id === item.id) !==
+                -1,
         }));
 
         const newList = initList.filter(
@@ -57,7 +58,7 @@ const Platform = () => {
     }, [imageStore.imageList, imageStore.selectedImages, searchKey]);
 
     const handleFilterChange = debounce((e) => {
-        setSearchKey(e.target.value);        
+        setSearchKey(e.target.value);
     }, 1000);
 
     const listHeader = (
@@ -81,10 +82,23 @@ const Platform = () => {
                     <List.Item
                         actions={[
                             <Tooltip title="选择">
-                                <Button icon={<SelectOutlined />} type="link" />
+                                <Button
+                                    onClick={() =>
+                                        imageStore.changeSelectedImage({
+                                            id: item.id,
+                                            filename: item.filename,
+                                            src: item.src,
+                                        })
+                                    }
+                                    icon={<SelectOutlined />}
+                                    type="link"
+                                />
                             </Tooltip>,
                             <Tooltip title="删除">
                                 <Button
+                                    onClick={() =>
+                                        imageStore.deleteImage(item.id)
+                                    }
                                     icon={<DeleteOutlined />}
                                     type="link"
                                     danger
@@ -107,6 +121,31 @@ const Platform = () => {
         </>
     );
 
+    const handleMenuChange = (e) => {
+        if (detectionStore.isDetecting()) {
+            message.warning('检测中，禁止切换功能！');
+            return;
+        }
+        if (detectionStore.isDone()) {
+            Modal.confirm({
+                title: '确定切换功能吗？',
+                content:
+                    '本功能下您已有检测结果，请妥善保存检测结果，如果切换功能将会丢失本次结果。',
+                onOk: () => {
+                    detectionStore.setPreparing();
+                    imageStore.setSelectedImages([imageStore.selectedImages[0]])
+                    setCurrentKey(e.key);
+                    nav(`/platform/${e.key}`);
+                },
+            });
+        }
+        if (detectionStore.isPreParing()) {
+            imageStore.setSelectedImages([imageStore.selectedImages[0]])
+            setCurrentKey(e.key);
+            nav(`/platform/${e.key}`);
+        }
+    };
+
     return (
         <Layout className="rs-platform">
             <Sider
@@ -122,7 +161,7 @@ const Platform = () => {
                     selectedKeys={[currentKey]}
                     style={{ height: '100%', borderRight: 0 }}
                     items={platformMenu}
-                    onClick={(e) => setCurrentKey(e.key)}
+                    onClick={handleMenuChange}
                 />
             </Sider>
             <Layout>

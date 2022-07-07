@@ -13,3 +13,11 @@ export function toLoginParam(params) {
     data['password'] = params.password;
     return data;
 }
+
+export function toDetectionParam(params) {
+    const data = {};
+    data['pic_list'] = params.imgList;
+    data['mode'] = params.mode;
+    data['color'] = params.color;
+    return data;
+}

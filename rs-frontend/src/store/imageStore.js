@@ -14,18 +14,25 @@ const useImageStore = () => {
         imageList,
         selectedImages,
         changeSelectedImage: (imgObj) => {
-            setSelectedImages([imgObj]);
+            selectedImages[0] = imgObj;
+            setSelectedImages([...selectedImages]);
             if (!imageList.find(img => img.id === imgObj.id)) {
                 setImageList([imgObj, ...imageList]);
             }
         },
         addSelectedImage: (imgObj) => {
-            setSelectedImages([...selectedImages, imgObj]);
+            selectedImages[1] = imgObj;
+            setSelectedImages([...selectedImages]);
             if (!imageList.find(img => img.id === imgObj.id)) {
                 setImageList([imgObj, ...imageList]);
             }
         },
+        deleteImage: (id) => {
+            setImageList(imageList.filter(item => item.id !== id));
+            setSelectedImages(selectedImages.filter(item => item.id !== id));
+        },
         setImageList,
+        setSelectedImages,
     }
 };
 

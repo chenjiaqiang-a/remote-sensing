@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
     Row,
     Col,
@@ -8,37 +8,61 @@ import {
     Tooltip,
     Slider,
     Switch,
+    message,
 } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 import ImageCanvas from '../components/ImageCanvas';
+import FileUploader from '../components/FileUpload';
 import Mask from '../components/Mask';
-
-import testImg1 from '../assets/task/change-1.png';
-import testImg2 from '../assets/task/change-2.png';
-import testMask from '../assets/task/change-mask.png';
-import { useEffect } from 'react';
 import ColorPicker from '../components/ColorPicker';
 import { BuildingIcon } from '../components/icons';
+import { Context } from '../store';
+import { useChangeDetection } from '../hooks';
 
 const ChangeDetection = () => {
+    const { imageStore, detectionStore } = useContext(Context);
     const [opacityLeft, setOpacityLeft] = useState(0);
     const [opacityRight, setOpacityRight] = useState(1);
     const [maskColorLeft, setMaskColorLeft] = useState('#ff0000');
     const [maskColorRight, setMaskColorRight] = useState('#ff0000');
+    const [maskSrcLeft, setMaskSrcLeft] = useState('');
+    const [maskSrcRight, setMaskSrcRight] = useState('');
     const [fillLeft, setFillLeft] = useState(false);
     const [fillRight, setFillRight] = useState(false);
+    const { detecting, handleDetection: detect } = useChangeDetection();
 
-    const [imageNode2, setImageNode2] = useState(null);
+    const imageNodeLeft = new window.Image();
+    if (imageStore.selectedImages.length > 0) {
+        imageNodeLeft.src = imageStore.selectedImages[0].src;
+    }
 
-    const imageNode1 = new window.Image();
-    imageNode1.src = testImg1;
+    const imageNodeRight = new window.Image();
+    if (imageStore.selectedImages.length > 1) {
+        imageNodeRight.src = imageStore.selectedImages[1].src;
+    }
 
-    useEffect(() => {
-        const image = new window.Image();
-        image.src = testImg2;
-        setImageNode2(image);
-    }, []);
+    const handleDetection = async () => {
+        detectionStore.setDetecting();
+        try {
+            const result = await detect(
+                imageStore.selectedImages[0],
+                maskColorLeft,
+                imageStore.selectedImages[1],
+                maskColorRight,
+            );
+            if (result[0].code === 200 && result[1].code === 200) {
+                setMaskSrcLeft('data:image/png;base64,' + result[0].data);
+                setMaskSrcRight('data:image/png;base64,' + result[1].data);
+                detectionStore.setDone();
+            } else {
+                throw Error('检测失败！');
+            }
+        } catch (error) {
+            message.error(error.message);
+            detectionStore.setPreparing();
+        }
+    };
 
     return (
         <div className="rs-change-detection">
@@ -83,6 +107,7 @@ const ChangeDetection = () => {
                         <Divider>结果调整</Divider>
                         <h4>只显示遮罩(左)</h4>
                         <Switch
+                            disabled={!detectionStore.isDone()}
                             checked={fillLeft}
                             onChange={(v) => {
                                 setFillLeft(v);
@@ -91,6 +116,7 @@ const ChangeDetection = () => {
                         />
                         <h4>只显示遮罩(右)</h4>
                         <Switch
+                            disabled={!detectionStore.isDone()}
                             checked={fillRight}
                             onChange={(v) => {
                                 setFillRight(v);
@@ -102,17 +128,34 @@ const ChangeDetection = () => {
                         direction="vertical"
                         style={{ width: '100%', marginTop: 'auto' }}
                     >
-                        <Button style={{ width: '100%' }} type="primary">
+                        <Button
+                            disabled={imageStore.selectedImages.length < 2}
+                            loading={detecting}
+                            onClick={handleDetection}
+                            style={{ width: '100%' }}
+                            type="primary"
+                        >
                             开始检测
                         </Button>
-                        <Button style={{ width: '100%' }}>保存结果(左)</Button>
-                        <Button style={{ width: '100%' }}>保存结果(右)</Button>
+                        <Button
+                            disabled={!detectionStore.isDone()}
+                            style={{ width: '100%' }}
+                        >
+                            保存结果(左)
+                        </Button>
+                        <Button
+                            disabled={!detectionStore.isDone()}
+                            style={{ width: '100%' }}
+                        >
+                            保存结果(右)
+                        </Button>
                     </Space>
                 </Col>
                 <Col span={10}>
                     <div className="change-slider">
                         透明度
                         <Slider
+                            disabled={!detectionStore.isDone()}
                             min={0}
                             max={1}
                             step={0.02}
@@ -120,20 +163,27 @@ const ChangeDetection = () => {
                             onChange={(value) => setOpacityLeft(value)}
                         />
                     </div>
-                    <ImageCanvas imageNode={imageNode1}>
-                        <Mask
-                            opacity={opacityLeft}
-                            width={imageNode1.width}
-                            height={imageNode1.height}
-                            imgSrc={testMask}
-                            fill={fillLeft}
-                        />
-                    </ImageCanvas>
+                    {imageStore.selectedImages.length > 0 ? (
+                        <ImageCanvas imageNode={imageNodeLeft}>
+                            {detectionStore.isDone() && (
+                                <Mask
+                                    opacity={opacityLeft}
+                                    width={imageNodeLeft.width}
+                                    height={imageNodeLeft.height}
+                                    imgSrc={maskSrcLeft}
+                                    fill={fillLeft}
+                                />
+                            )}
+                        </ImageCanvas>
+                    ) : (
+                        <FileUploader />
+                    )}
                 </Col>
                 <Col span={10}>
                     <div className="change-slider">
                         透明度
                         <Slider
+                            disabled={!detectionStore.isDone()}
                             min={0}
                             max={1}
                             step={0.02}
@@ -141,16 +191,20 @@ const ChangeDetection = () => {
                             onChange={(value) => setOpacityRight(value)}
                         />
                     </div>
-                    {imageNode2 && (
-                        <ImageCanvas imageNode={imageNode2}>
-                            <Mask
-                                opacity={opacityRight}
-                                width={imageNode2.width}
-                                height={imageNode2.height}
-                                imgSrc={testMask}
-                                fill={fillRight}
-                            />
+                    {imageStore.selectedImages.length > 1 ? (
+                        <ImageCanvas imageNode={imageNodeRight}>
+                            {detectionStore.isDone() && (
+                                <Mask
+                                    opacity={opacityRight}
+                                    width={imageNodeRight.width}
+                                    height={imageNodeRight.height}
+                                    imgSrc={maskSrcRight}
+                                    fill={fillRight}
+                                />
+                            )}
                         </ImageCanvas>
+                    ) : (
+                        <FileUploader single={false} />
                     )}
                 </Col>
             </Row>

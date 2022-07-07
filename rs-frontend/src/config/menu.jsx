@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import {
     ExtractionIcon,
     ChangeIcon,
@@ -10,21 +9,21 @@ export const platformMenu = [
     {
         key: 'target-extraction',
         icon: <ExtractionIcon />,
-        label: <Link to="/platform/target-extraction">目标提取</Link>,
+        label: "目标提取",
     },
     {
         key: 'change-detection',
         icon: <ChangeIcon />,
-        label: <Link to="/platform/change-detection">变化检测</Link>,
+        label: "变化检测",
     },
     {
         key: 'object-detection',
         icon: <ObjectIcon />,
-        label: <Link to="/platform/object-detection">目标检测</Link>,
+        label: "目标检测",
     },
     {
         key: 'feature-classification',
         icon: <ClassificationIcon />,
-        label: <Link to="/platform/feature-classification">地物分类</Link>,
+        label: "地物分类",
     },
 ];
